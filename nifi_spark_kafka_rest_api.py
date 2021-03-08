@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
 #Describe schema (productid will be enough to find viewed category in the last 5 minute)
     schema = StructType([
+    StructField("messageid", StringType()),
     StructField("userid", StringType()),
     StructField("properties", StructType([
         StructField("productid", StringType())
@@ -30,18 +31,18 @@ if __name__ == "__main__":
 #Checking schema if everything is correct
     value_df.printSchema()
 #Explode dataframe to remove sub-structures
-    explode_df = value_df.selectExpr("value.userid", "value.properties.productid")
+    explode_df = value_df.selectExpr("value.messageid", "value.userid", "value.properties.productid")
 #Checking schema if everything is correct
     explode_df.printSchema()
 #Set timeParserPolicy=Legacy to parse timestamp in given format
     spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
 #Convert string type to timestamp
-    transformed_df = explode_df.select("userid", "productid")
+    transformed_df = explode_df.select("messageid", "userid", "productid")
 
 #Checcking schema if everything is correct
     transformed_df.printSchema()
 
-    kafka_target_df = transformed_df.selectExpr("userid as key",
+    kafka_target_df = transformed_df.selectExpr("messageid as key",
                                                  "to_json(struct(*)) as value")
     kafka_target_df.printSchema()
 #Write spark stream to console or csv sink
@@ -50,7 +51,7 @@ if __name__ == "__main__":
 
     nifi_query = kafka_target_df \
             .writeStream \
-            .queryName("Notification Writer") \
+            .queryName("User Api Writer") \
             .format("kafka") \
             .option("kafka.bootstrap.servers", "localhost:9092") \
             .option("topic", "apiconsume") \

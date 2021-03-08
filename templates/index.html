@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+		<title> MyApp </title>
+</head>
+
+<body>
+
+	<!-- Its the form where a user can submit his or her name and email -->
+
+	<form class="form-inline" action="" method="POST">
+		  <label>User</label>
+	  	<input type="text" id="name" placeholder="Enter Name" name="name">
+	  	<button type="submit">Submit</button>
+	</form>
+
+
+	<!-- The table where all the data from the DB will be appeared -->
+
+	<table class="data" border="1" style="width: 100%; margin-top: 20px; text-align: center;">
+		<tr>
+			<th colspan="5">User Data</th>
+	  	</tr>
+	  	<tr>
+	  		<td>Result1</td>
+	    	<td>Result2</td>
+	    	<td>Result3</td>
+				<td>Result4</td>
+				<td>Result5</td>
+	  	</tr>
+
+	  	<!-- The user_data is a variable containing all the user data from the DB. -->
+
+			{% if my_dict3 %}
+	  	<tr>
+				<td>{{name}}:{{my_dict3[result1]}}:  {{result1}}</td>
+				<td>{{name}}:{{my_dict3[result2]}}:  {{result2}}</td>
+				<td>{{name}}:{{my_dict3[result3]}}:  {{result3}}</td>
+				<td>{{name}}:{{my_dict3[result4]}}:  {{result4}}</td>
+				<td>{{name}}:{{my_dict3[result5]}}:  {{result5}}</td>
+	  	</tr>
+			{% endif %}
+
+	</table>
+</body>
